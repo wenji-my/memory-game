@@ -1,0 +1,56 @@
+.flip-container, .front, .back {
+    width: 100%;
+    height: 200px;
+    border-radius: 1em;
+}
+
+.flip-container {
+    perspective: 1000;
+    transform-style: preserve-3d;
+}
+
+.flip {
+    position: relative;
+    transition: 0.2s;
+    transform-style: preserve-3d;
+}
+
+.rotate {
+    transform: rotateY(180deg);
+}
+
+.front, .back {
+    position: absolute;
+    top: 0;
+    left: 0;
+    backface-visibility: hidden;
+}
+
+.front {
+    z-index: 2;
+    background-color: #303d49;
+}
+
+.back {
+    background-color: skyblue;
+    display: flex;
+    -webkit-align-items: center;
+    align-items: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    transform: rotateY(-180deg);
+}
+
+/*.flip-container:hover .flip{transform:rotateY(180deg);}*/
+
+@media screen and (max-width: 1200px) {
+    .flip-container, .front, .back {
+        height: 160px;
+    }
+}
+
+@media screen and (max-width: 991px) {
+    .flip-container, .front, .back {
+        height: 100px;
+    }
+}

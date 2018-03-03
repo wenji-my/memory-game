@@ -1,0 +1,58 @@
+
+.container {
+    margin-bottom: 20px;
+}
+
+.row {
+    margin: 0;
+}
+.col {
+    padding: 0;
+    margin: 3em 3em 0 0;
+}
+.card-board {
+    margin-top: 10px;
+    padding: 0 0 3em 3em;
+    background: linear-gradient(to bottom right, #1bdfbe, #9581c9);
+    border-radius: 10px;
+    -moz-box-shadow: 15px 15px 30px #888888; /* 老的 Firefox */
+    box-shadow: 15px 15px 30px #888888;
+}
+
+.moves {
+    padding-right: 100px;
+}
+
+.repeat {
+    padding-left: 200px;
+}
+
+.btn {
+    font-family: "Times New Roman",Georgia,Serif;
+    color: white;
+    background-color: #00b18c;
+    padding: 6px 20px;
+    border-color: #0b2e13;
+}
+
+.vertical-center {
+    display: flex;
+    -webkit-align-items: center;
+    align-items: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+}
+
+h1 {
+    margin: 15px 0;
+}
+
+@media screen and (max-width: 991px) {
+    .col {
+        margin: 2em 2em 0 0;
+    }
+
+    .card-board {
+        padding: 0 0 2em 2em;
+    }
+}
