@@ -1,5 +1,6 @@
 
-let seconds = 0;//计时秒数
+let seconds;//计时秒数
+let stopTimer;
 
 /**
  * 初始化数据
@@ -32,20 +33,15 @@ function handleStars(moves) {
     const starDiv = $('.moves');
     //超过10次减少一颗星星
     const starI = $('<i class="fa fa-star-o"></i>');
-    if (moves >= 10 && moves < 20) {
+    if (moves >= 15 && moves < 25) {
         if (starDiv.find('i')[2].className === 'fa fa-star') {
             //实心才进来，空心不用进来
             starDiv.find('i')[2].remove();
             starDiv.find('span').before(starI);
         }
-    }else if (moves >=20 && moves < 30) {
+    }else if (moves >=25) {
         if (starDiv.find('i')[1].className === 'fa fa-star') {
             starDiv.find('i')[1].remove();
-            starDiv.find('span').before(starI);
-        }
-    }else if(moves >=30){
-        if (starDiv.find('i')[0].className === 'fa fa-star') {
-            starDiv.find('i')[0].remove();
             starDiv.find('span').before(starI);
         }
     }
@@ -55,10 +51,12 @@ function handleStars(moves) {
  * 计时器函数
  */
 function timers() {
-    seconds++;
-    setTimeout(function () {
-        timers();
-    },1000);
+    if (!stopTimer) {
+        console.log(seconds);
+        setTimeout(function () {
+            timers();
+        },1000);
+    }
 }
 
 /**
@@ -131,6 +129,7 @@ function makeCard(container) {
             div_flip_container.click(function () {
                 if (firstClick) {
                     //第一次点击才计时
+                    stopTimer = false;
                     timers();
                     firstClick = false;
                 }
@@ -166,7 +165,6 @@ function makeCard(container) {
                                     //转回去
                                     prev_card.find('.flip').removeClass('rotate');
                                     div_flip.removeClass('rotate');
-                                    console.log(div_flip.css('transform'));
                                     //卡片正面颜色变回去
                                     prev_card.find('.back').css('background-color','skyblue');
                                     div_back.css('background-color','skyblue');
@@ -191,6 +189,7 @@ function makeCard(container) {
                                 all_card.push(div_back[0].childNodes[0].classList[1]);
                                 if (all_card.length === 8) {
                                     //8对卡片全部匹配成功
+                                    stopTimer = true;
                                     setTimeout(function () {
                                         const starDiv = $('.moves');
                                         let stars = 0;
@@ -206,10 +205,10 @@ function makeCard(container) {
                                         winText.appendTo(container);
                                         winText.height(height);
                                         $(`<div>
-                                        <h2>Congratulations! You Won!</h2>
-                                        <p>Use for ${seconds}s! With ${moves} Moves and ${stars} Stars.</p>
-                                        <button class="btn">play again</button>
-                                    </div>`).appendTo(winText);
+                                                <h2>Congratulations! You Won!</h2>
+                                                <p>Use for ${seconds}s! With ${moves} Moves and ${stars} Stars.</p>
+                                                <button class="btn">play again</button>
+                                           </div>`).appendTo(winText);
                                         $('button').click(function () {
                                             container.empty();
                                             initGame();
@@ -227,6 +226,8 @@ function makeCard(container) {
 }
 
 function initGame() {
+    seconds = 0;
+    stopTimer = true;
     let container = $('.container');
     makeHeader(container);
     makeCard(container);
