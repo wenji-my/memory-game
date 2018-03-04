@@ -1,5 +1,5 @@
 
-let seconds;//计时秒数
+let starMillisecond = 0;//第一次点击时毫秒数
 let stopTimer;
 
 /**
@@ -52,10 +52,21 @@ function handleStars(moves) {
  */
 function timers() {
     if (!stopTimer) {
-        console.log(seconds);
-        setTimeout(function () {
-            timers();
-        },1000);
+        let temp = Date.now()-starMillisecond;
+        let millisecondStr;
+        if (temp % 1000 < 10) {
+            millisecondStr = '00' + temp % 1000;
+        }else if (temp % 1000 > 10 && temp % 1000 < 100) {
+            millisecondStr = '0' + temp % 1000;
+        }else if (temp % 1000 > 100 && temp % 1000 < 1000) {
+            millisecondStr = temp % 1000;
+        }
+        if (millisecondStr) {
+            //貌似millisecondStr会出现undefined的情况？
+            $('h2').html(`${Math.ceil(temp/1000)}.${millisecondStr}`);
+        }
+
+        setTimeout("timers()",1);
     }
 }
 
@@ -66,9 +77,11 @@ function timers() {
 function makeHeader(container) {
     const title = $('<h1 class="text-center">Matching Game</h1>');
     title.appendTo(container);
+    const timerP = $('<h2 class="text-center">0.000</h2>');
+    timerP.appendTo(container);
     const starRow = $('<div class="row"></div>');
     starRow.appendTo(container);
-    const starDiv = $('<div class="col-md-6 text-right moves"></div>');
+    const starDiv = $('<div class="col-6 col-sm-6 text-right moves"></div>');
     starDiv.appendTo(starRow);
     for (let i = 0; i < 3; i++){
         const starI = $('<i class="fa fa-star"></i>');
@@ -77,7 +90,7 @@ function makeHeader(container) {
     const starMoves = $('<span>0Moves</span>');
     starMoves.css("margin-left","5px");
     starMoves.appendTo(starDiv);
-    const repeatDiv = $('<div class="col-md-6 repeat"></div>');
+    const repeatDiv = $('<div class="col-6 col-sm-6 repeat"></div>');
     repeatDiv.appendTo(starRow);
     const repeatI = $('<i class="fa fa-repeat"></i>');
     repeatI.appendTo(repeatDiv);
@@ -129,6 +142,7 @@ function makeCard(container) {
             div_flip_container.click(function () {
                 if (firstClick) {
                     //第一次点击才计时
+                    starMillisecond = Date.now();
                     stopTimer = false;
                     timers();
                     firstClick = false;
@@ -206,13 +220,13 @@ function makeCard(container) {
                                         winText.height(height);
                                         $(`<div>
                                                 <h2>Congratulations! You Won!</h2>
-                                                <p>Use for ${seconds}s! With ${moves} Moves and ${stars} Stars.</p>
+                                                <p>Use for ${Math.ceil((Date.now()-starMillisecond)/1000)} seconds! With ${moves} Moves and ${stars} Stars.</p>
                                                 <button class="btn">play again</button>
                                            </div>`).appendTo(winText);
                                         $('button').click(function () {
                                             container.empty();
                                             initGame();
-                                        })
+                                        });
                                     },900);
                                 }
                             }
@@ -226,7 +240,6 @@ function makeCard(container) {
 }
 
 function initGame() {
-    seconds = 0;
     stopTimer = true;
     let container = $('.container');
     makeHeader(container);
@@ -240,6 +253,25 @@ function initGame() {
         },10);
     });
 }
+
+$(window).resize(function() {
+    let width = $(this).width();
+    let height = $(this).height();
+    let textRight = $('.moves');
+    if (textRight) {
+        if (width < 768) {
+            if (textRight.hasClass('text-right')) {
+                textRight.removeClass('text-right').addClass('text-center');
+            }
+        } else {
+            if (!textRight.hasClass('text-right')) {
+                textRight.removeClass('text-center').addClass('text-right');
+            }
+        }
+
+    }
+
+});
 
 $(function () {
     initGame();
